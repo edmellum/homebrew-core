@@ -361,6 +361,12 @@ class Aspell < Formula
     sha256 "e00fcaad60a90cfed687ba02f62be8c27b8650457dd3c5bdcb064b476da059b4"
   end
 
+  resource "nb" do
+    url "https://ftp.gnu.org/gnu/aspell/dict/nb/aspell-nb-0.50.1-0.tar.bz2"
+    mirror "https://ftpmirror.gnu.org/aspell/dict/nb/aspell-nb-0.50.1-0.tar.bz2"
+    sha256 "e7746e8b617b2df576c1172399544818084524504202b16c747f52db5e5d228a"
+  end
+
   resource "nds" do
     url "https://ftp.gnu.org/gnu/aspell/dict/nds/aspell6-nds-0.01-0.tar.bz2"
     mirror "https://ftpmirror.gnu.org/aspell/dict/nds/aspell6-nds-0.01-0.tar.bz2"
