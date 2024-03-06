@@ -777,6 +777,7 @@ grpc-swift
 grype
 gsmartcontrol
 gsoap
+gstreamer
 gtk-gnutella
 gupnp
 gupnp-tools

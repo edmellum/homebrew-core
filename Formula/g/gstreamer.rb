@@ -4,13 +4,13 @@ class Gstreamer < Formula
   license all_of: ["LGPL-2.0-or-later", "LGPL-2.1-or-later", "MIT"]
 
   stable do
-    url "https://gitlab.freedesktop.org/gstreamer/gstreamer/-/archive/1.22.10/gstreamer-1.22.10.tar.gz"
-    sha256 "bba3a87f82d509802d96a5caf2c47982234063928870623b222f60702f1f50eb"
+    url "https://gitlab.freedesktop.org/gstreamer/gstreamer/-/archive/1.24.0/gstreamer-1.24.0.tar.gz"
+    sha256 "c2932dc3867de8f3ce43eb3cf5ca084d6a19d7d55eb84d1cf3237f1dcb5262c9"
 
     # When updating this resource, use the tag that matches the GStreamer version.
     resource "rs" do
-      url "https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs/-/archive/gstreamer-1.22.10/gst-plugins-rs-gstreamer-1.22.10.tar.gz"
-      sha256 "ea866cdac87a57e08cf4529be5ba2870054e764b83dbfca733cd6fea1b9a3e11"
+      url "https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs/-/archive/gstreamer-1.24.0/gst-plugins-rs-gstreamer-1.24.0.tar.gz"
+      sha256 "32ca3097d62a9ba41b048a97219d95f6e638cdac7195724e3400043bf055dd8d"
     end
   end
 
@@ -110,11 +110,6 @@ class Gstreamer < Formula
   link_overwrite "lib/pkgconfig/gst*.pc", "lib/python3.12/site-packages/gi/overrides/*", "include/gstreamer-1.0/*"
   link_overwrite "share/gir-1.0/Gst*.gir", "share/gir-1.0/GES-1.0.gir", "share/gstreamer-1.0/*"
   link_overwrite "share/locale/*/LC_MESSAGES/gst-*.mo", "share/man/man1/g*"
-
-  # Avoid overlinking of `gst-python` python extension module.
-  # https://gitlab.freedesktop.org/gstreamer/gst-python/-/merge_requests/41
-  # TODO: Migrate patch to gstreamer monorepo.
-  patch :DATA
 
   def install
     (buildpath/"subprojects/gst-plugins-rs").install resource("rs")
@@ -238,31 +233,3 @@ class Gstreamer < Formula
     EOS
   end
 end
-
-__END__
-diff --git a/subprojects/gst-python/gi/overrides/meson.build b/subprojects/gst-python/gi/overrides/meson.build
-index 5977ee3..1b399af 100644
---- a/subprojects/gst-python/gi/overrides/meson.build
-+++ b/subprojects/gst-python/gi/overrides/meson.build
-@@ -3,13 +3,20 @@ install_data(pysources,
-     install_dir: pygi_override_dir,
-     install_tag: 'python-runtime')
-
-+# avoid overlinking
-+if host_machine.system() == 'windows'
-+    python_ext_dep = python_dep
-+else
-+    python_ext_dep = python_dep.partial_dependency(compile_args: true)
-+endif
-+
- gstpython = python.extension_module('_gi_gst',
-     sources: ['gstmodule.c'],
-     install: true,
-     install_dir : pygi_override_dir,
-     install_tag: 'python-runtime',
-     include_directories : [configinc],
--    dependencies : [gst_dep, python_dep, pygobject_dep])
-+    dependencies : [gst_dep, python_ext_dep, pygobject_dep])
-
- env = environment()
- env.prepend('_GI_OVERRIDES_PATH', [
